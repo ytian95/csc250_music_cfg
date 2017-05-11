@@ -1,9 +1,11 @@
+# notes_to_midi.py
+#
+# Stephanie Xie, Youyou Tian, Jackie Byun
+# 05/12/2017
+# CSC 250
+#
+# A script that takes in a text file of notes and converts the notes to MIDI format.
 # -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
 
 import midi
 import sys
@@ -20,6 +22,7 @@ NOTES = {
         "A_5":midi.A_5, "B_5":midi.B_5, "C#_5":midi.Cs_5, 
         "D_5":midi.D_5, "E_5":midi.E_5, "F#_5":midi.Fs_5, "G_5":midi.G_5,
         }
+
 CHORDS = {
         "I"  : ("D_2", "F#_2", "A_3"),
         "ii" : ("E_2", "G_2", "B_3"),
@@ -28,26 +31,44 @@ CHORDS = {
         "V"  : ("A_3", "C#_3", "E_3"),
         "vi" : ("B_3", "D_3", "F#_3")
         }
+
 def main():
     note_file_name = sys.argv[1]
     #chord_file_name = sys.argv[2]
-    pattern = midi.Pattern()
-    
+
+    pattern = midi.Pattern()    # contains a list of tracks
+
+    '''Convert notes to MIDI format
+
+       NoteOnEvent:  captures the start of a note, i.e. when a piano key is pressed
+           @param tick When the event occurs
+           @param velocity How hard the key is pressed
+           @param pitch Note value of the key pressed
+
+       NoteOffEvent:  captures the end of a note, i.e. when a piano key is released
+           @param tick When the event occurs
+           @param pitch Note value of the key released
+    '''
     with open(note_file_name, "r") as f:
         read = f.read()
         notes = read.strip().split(" ")
-        track = midi.Track()
+        track = midi.Track()    # contains a list of MIDI events
         pattern.append(track)
         i = 0
+
         for note in notes:
             on = midi.NoteOnEvent(tick=(0), velocity=75, pitch=NOTES[note])
             track.append(on)
             off = midi.NoteOffEvent(tick=(100), pitch=NOTES[note])
             track.append(off)
             i += 1
-    eot = midi.EndOfTrackEvent(tick=1)
-    track.append(eot)
+            
+    eot = midi.EndOfTrackEvent(tick=1)  # signify end of song
+    track.append(eot)   # append song to track
+    
     """
+    '''Build and incorporate underlying chords into the song
+    '''
     with open(chord_file_name, "r") as f:
         read = f.read()
         chords = read.strip().split(" ")
@@ -63,6 +84,6 @@ def main():
                 t.append(off)
     """
         
-    midi.write_midifile(note_file_name[:-4] + "_midi.mid", pattern)
+    midi.write_midifile(note_file_name[:-4] + "_midi.mid", pattern) # save pattern as a file
 
 main()

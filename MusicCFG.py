@@ -1,9 +1,28 @@
+# MusicCFG.py
+#
+# Stephanie Xie, Youyou Tian, Jackie Byun
+# 05/12/2017
+# CSC 250
+#
+# A program that creates a context-free grammar and generates musical notes over a D Major chord progression.
+
 import re
 import random
 
 class MusicCFG():
     def __init__(self):
-        '''Initialize a grammar with rules for generating music in D Major
+        '''Initialize a grammar with rules for the most common chord progressions in D Major
+
+           Nonterminals:
+               Progressions:  I, ii, iii, IV, V, vi
+               Chords (triads):  I', ii', iii', IV', V', vi'
+               Notes (name):  A, B, C#, D, E, F#, G
+
+           Terminals:
+               Notes (SPN):  Note_Octave
+                   SPN (scientific pitch notation) is a method of specifying pitch
+                   by combining a musical note name and a number identifying the note's octave
+                       e.g. C_4 = middle C
         '''
 
         self.grammar = {
@@ -29,9 +48,12 @@ class MusicCFG():
             'C#': ['C#_4', 'C#_5']
             };
 
-        self.chords = [];
+        self.chords = []; # list of chords generated
 
     def genMusic(self, symbol):
+        '''Generate music using grammar
+        '''
+        
         music = '';
         symbols = random.choice(self.grammar[symbol]);
         for sym in symbols.split():
@@ -42,9 +64,7 @@ class MusicCFG():
             if (sym == 'I' or sym == 'ii' or sym == 'iii' or sym == 'IV' or sym == 'V' or sym == 'vi'):
                 self.chords.append(sym);
 
-        return music;
-
-    
+        return music;   
 
 def main():
     m = MusicCFG();
