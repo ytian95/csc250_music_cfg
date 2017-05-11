@@ -14,8 +14,8 @@ class MusicCFG():
         '''Initialize a grammar with rules for the most common chord progressions in D Major
 
            Nonterminals:
-               Progressions:  I, ii, iii, IV, V, vi
-               Chords (triads):  I', ii', iii', IV', V', vi'
+               Progressions:  p_I, p_ii, p_iii, p_IV, p_V, p_vi
+               Chords (triads):  p_I', p_ii', p_iii', p_IV', p_V', p_vi'
                Notes (name):  A, B, C#, D, E, F#, G
 
            Terminals:
@@ -26,19 +26,19 @@ class MusicCFG():
         '''
 
         self.grammar = {
-            'S': ['I'],
-            'I': ['p_I p_I p_I p_I ii', 'p_I p_I p_I p_I iii', 'p_I p_I p_I p_I IV', 'p_I p_I p_I p_I V', 'p_I p_I p_I p_I vi', 'p_I p_I p_I p_I I', 'p_I p_I p_I p_I'],
-            'ii': ['p_ii p_ii p_ii p_ii V', 'p_ii p_ii p_ii p_ii vi'],
-            'iii': ['p_iii p_iii p_iii p_iii IV', 'p_iii p_iii p_iii p_iii vi'],
-            'IV': ['p_IV p_IV p_IV p_IV I', 'p_IV p_IV p_IV p_IV ii', 'p_IV p_IV p_IV p_IV V'],
-            'V': ['p_V p_V p_V p_V vi', 'p_V p_V p_V p_V I'],
-            'vi': ['p_vi p_vi p_vi p_vi ii', 'p_vi p_vi p_vi p_vi iii', 'p_vi p_vi p_vi p_vi IV', 'p_vi p_vi p_vi p_vi V'],
-            'p_I': ['D','F#', 'A'],
-            'p_ii': ['E', 'G', 'B'],
-            'p_iii': ['F#', 'A', 'C#'],
-            'p_IV': ['G', 'B', 'D'],
-            'p_V': ['A', 'C#', 'E'],
-            'p_vi': ['B', 'D', 'F#'],
+            'S': ['p_I'],
+            'p_I': ['I I I I p_ii', 'I I I I p_iii', 'I I I I p_IV', 'I I I I p_V', 'I I I I p_vi', 'I I I I p_I', 'I I I I'],
+            'p_ii': ['ii ii ii ii p_V', 'ii ii ii ii p_vi'],
+            'p_iii': ['iii iii iii iii p_IV', 'iii iii iii iii p_vi'],
+            'p_IV': ['IV IV IV IV p_I', 'IV IV IV IV p_ii', 'IV IV IV IV p_V'],
+            'p_V': ['V V V V p_vi', 'V V V V p_I'],
+            'p_vi': ['vi vi vi vi p_ii', 'vi vi vi vi p_iii', 'vi vi vi vi p_IV', 'vi vi vi vi p_V'],
+            'I': ['D','F#', 'A'],
+            'ii': ['E', 'G', 'B'],
+            'iii': ['F#', 'A', 'C#'],
+            'IV': ['G', 'B', 'D'],
+            'V': ['A', 'C#', 'E'],
+            'vi': ['B', 'D', 'F#'],
             'D': ['D_4', 'D_5'],
             'E': ['E_4', 'E_5'],
             'F#': ['F#_4', 'F#_5'],
@@ -61,7 +61,7 @@ class MusicCFG():
                 music += sym + ' ';
             else:
                 music += self.genMusic(sym);
-            if (sym == 'I' or sym == 'ii' or sym == 'iii' or sym == 'IV' or sym == 'V' or sym == 'vi'):
+            if (sym == 'p_I' or sym == 'p_ii' or sym == 'p_iii' or sym == 'p_IV' or sym == 'p_V' or sym == 'p_vi'):
                 self.chords.append(sym);
 
         return music;   
