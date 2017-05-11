@@ -15,7 +15,7 @@ class MusicCFG():
 
            Nonterminals:
                Progressions:  p_I, p_ii, p_iii, p_IV, p_V, p_vi
-               Chords (triads):  p_I', p_ii', p_iii', p_IV', p_V', p_vi'
+               Chords (triads):  I, ii, iii, IV, V, vi
                Notes (name):  A, B, C#, D, E, F#, G
 
            Terminals:
