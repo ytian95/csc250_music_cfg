@@ -47,6 +47,10 @@ h3:target {
   from { background: yellow; }
   to { background: white; }
 }
+
+.tab {
+    margin-left: 40px;
+}
 </style>
 </head>
 
@@ -62,14 +66,25 @@ h3:target {
   
   <p>With any form of art, there is a form and technique to how it is created and music is no different. Music theory is the study of the language of music and explaining the music we hear. From examinations of many pieces across many time periods, music theorists have distilled certain patterns that composers tend to follow that make music sound harmonically pleasant to the ear.</p>
 
-<p>At a most basic level, music can be distilled to a set of patterns. These patterns can be modeled using different languages from the Chomsky hierarchy, we have chosen to focus on context free grammars (CFGs) to imitate basic music theory. Using CFGs to model musical progression is not a new; the idea itself is formed on the basis of linguistics. Instead of words and grammars, we have notes and musical grammars. A CFG can be used to create a structure in the underlying music. CFGs can be used to model composers who follow a certain style and pattern, such as Bach or Mozart. Grammars can also be used as an analytics tool or as a composing tool. 
-</p>  
+  <p>At a most basic level, music can be distilled to a set of patterns. These patterns can be modeled using different languages from the Chomsky hierarchy, we have chosen to focus on context free grammars (CFGs) to imitate basic music theory. Using CFGs to model musical progression is not a new; the idea itself is formed on the basis of linguistics. Instead of words and grammars, we have notes and musical grammars. A CFG can be used to create a structure in the underlying music. CFGs can be used to model composers who follow a certain style and pattern, such as Bach or Mozart. Grammars can also be used as an analytics tool or as a composing tool. </p>  
   
   <h3 id="two">Background</h3>
   
-  <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>  
+  <p>The background section details basic concepts in music theory related to this project as well as an overview into CFGs.</p>  
   
   <h4>Music Theory</h4> 
+      <p>In addition to pitch and rhythm, the basis of all songs can be broken down to its fundamental chords, or a harmonic set of pitches sounded simultaneously. A scale is a set of musical notes that are ordered by a pitch. Notes of a key are ordered based on a specific pattern or relative pitch differences. [2]</p>
+      
+      <p>Though intervals between notes can sound consonant (pleasing) or dissonant (clashing), we will be focusing on a specific set of chords that are tonal with, relating to, the key. These chords are composed of diatonic notes that belong only to the same key (Figure 1). A series of chords is a chord progression. Though it is possible to use any pattern of chords, certain chord patterns have been established as common-place harmony. To describe the set of standardized chord patterns, a set of roman numeral notation was created, as seen in the notation above the chords in Figure 1. The roman numerals dictate which degree the root of the chord, the lowest note of the chord, is relative to the key of the piece. </p>
+      
+      <p>Music theorists have examined many different songs and have determined the most common major key chord progressions rules follow Figure 2. The direction of the arrows detail order. The dominant chord, V, can to go to the tonic chord, I, or the vi chord. Having the dominant go to any other chord, like IV, will make the progression sound off. Note that the tonic chord, I, can be followed by any chord in the diagram. Note that it is possible for progressions to not follow the given pattern, but they may not necessarily sound “nice.”</p>
+      
+      <p>Many famous songs, such as Pachelbel’s Canon, follow the chord progression given in Figure 2. Figure 3 gives another example of a melody that follows a chord progression that matches the diagram. From hearing it, it sounds nice and complete.</p>
+      
+      <p>Figure 4 is an example of a melody that does not follow the stand progression rules. This progression ends on the dominant chord, V, making it sound incomplete. Even through the rest of the melody, something sounds off even though the notes of each measure were taken from its corresponding chord.</p>
+
+      <p>Both of these melodies were created by hand to give examples of pieces that do and do not follow the standard progression rules. Both contain notes not part of the underlying chord and varying rhythms to let the piece flow better. Our music grammar, detailed in section 3.0, does not include these passing notes or a varied rhythm.</p>
+      
   <h4>Context Free Grammars</h4> 
       <p>A context free grammar (CFG) is a set of recursive rules (aka productions) that are used to generate patterns of strings. The language of a grammar is the set of strings it generates. A language is context-free if there is a CFG for it. Its formal definition can be described as a four tuple G = (N, Σ, R, S) where:
       </p>
@@ -95,13 +110,50 @@ h3:target {
         <br /><br />
         In the context of creating a model for music/composition, parametric grammars can be used as an extension of CFGs where non-terminals have parameters, small patterns of music, that take values in the set of terminals. These parameters play different roles in a piece according to the measure-level and/or phase-level to create various notions of development within musical sound. Overall, parametric grammars have the same expressiveness as context-free grammars but can be significantly more concise.
       </p>
-  
-  <h3 id="four">Implementation</h3>
-  
+  <h3 id="three">Music CFG</h3>
+  <h4>Implementation Details</h4>
+    <p>The nonterminal symbols of our CFG are separated into three distinct categories: </p>
+    <ul>
+        <li><b>progression</b> (p_I, p_ii, p_iii, p_IV, p_V, p_vi):  determines the order of the chords </li>
+        <li><b>chord</b> (I, ii, iii, IV, V, vi):  determines the next note that can be selected; since we are using triads, there are only three possible notes per chord</li>
+        <li><b>note (name)</b> (A, B, C#, D, E, F#, G):  determines the musical note</li>
+    </ul>
+    <p>The name of the note proceeds to a terminal symbol, note (SPN), i.e. the pitch of the note. SPN, or scientific pitch notation, specifies pitch by combining the name and octave of a given note. This allows the MIDI to differentiate between, say, Middle C (C_4) and High C (C_6), the C two octaves above Middle C. </p>
+    <p>Below is a general outline of the production rules:</p>
+    <p style="margin-left: 40px">start → progression I</p>
+    <p style="margin-left: 80px">We chose to start and end on the D Major tonic chord, I, due to the sense of completeness it lends the generated composition. </p>
+    <p style="margin-left: 120px">S → p_I </p>
+    
+    <p style="margin-left: 40px">progression → chord chord chord chord progression</p>
+    <p style="margin-left: 80px">The RHS chord corresponds to the LHS progression, as indicated by their matching Roman numerals. The RHS progression points to any chord that can legally follow the chord given by the LHS progression. </p>
+    <p style="margin-left: 80px">Here, since our grammar selects only one note per chord, in order for that chord to be represented in the music, we’ve included it four times per rule; this increases the chances of obtaining all three notes in a triad. Thus, each rule really generates a “broken chord,” i.e. a chord broken into a sequence of notes. </p>
+    <p style="margin-left: 80px">The grammar terminates once it applies the rule p_I → I I I I.</p>
+    <p style="margin-left: 120px">p_I → I I I I p_I | I I I I p_ii | I I I I p_iii | ... | I I I I</p>
+    <p style="margin-left: 40px">chord → note1 note2 note3</p>
+    <p style="margin-left: 120px">I → D F# A</p>
+    <p style="margin-left: 40px">note → note_octave note_octave</p>
+    <p style="margin-left: 120px">D → D_4 D_5</p>
+    
+  <h4>Generated Music</h4>
+    <p>The music we generated sounds pleasant enough and is clearly in the key of D Major, so in that regard our CFG is a success. Yet the music also sounds disjointed:  it lacks motifs, phrasing, and other major elements used to develop an overarching theme; any repetition is by chance and therefore should not be considered a deliberate contribution to the melody. </p>
+    
   <h3 id="five">Related Work</h3>
+    <p>Among the efforts to develop formal grammars for music generation, there have been many studies that expand upon the methods for analyzing classical Western music, such as Schenkerian analysis [3] and the Generative Theory of Tonal Music (GTTM) [4]. While incorporating these methods is popular due to their similarities with formal grammars, these approaches lack generality when modeling high-level musical structure; they are dependent upon the piece, for “unless the structure is predetermined down to the level of individual notes, the number of compositions that fit a particular structure will be extremely large to infinite depending on how many musical constraints are imposed” (Quick 2). How, then, can musical structure be modelled in such a way that “the concepts of chorus, verse, theme, variation, and development exist independently of the underlying music data” (Giraud and Staworko 2)? </p>
+    <p>Giraud and Staworko attempt to model musical structure with parametric grammar. Unlike our CFG, which uses only single notes, their grammar represents a piece using a set of parameters, wherein each parameter is a small pattern of music that’s been given a particular role in the piece. This allows the grammar to be generic enough to model multiple pieces. [5]</p>
   
   <h3 id="six">Future Work</h3>
+    <p>There are still many improvements we can make to our CFG to better follow musical grammar. </p>
+    <p>First, our CFG does not have a varied rhythm. We could extend our terminal hierarchy to create representations of possible rhythms in additional to note pitch.</p>
+    <p>Next, CFGs do not have memory and thus it is difficult to replicate repeated motifs than by chance at the level of detail we have implemented. One possible way to overcome this is by having the terminals go to a specific melodic note pattern rather than an individual note [1]. </p>
+    <p>Finally, we had wanted to include the underlying chord as part of the generated midi, similar to the examples linked to Figures 3 and 4. We had encountered difficulties, mentioned in the provided python code, generating multi-track midis through the found python-midi library.</p>
     
+  <h5 id="sources">Sources:</h5>
+    [1] http://www.grappa.univ-lille3.fr/~staworko/papers/staworko-mcm15.pdf
+    [2] https://en.wikipedia.org/wiki/Music_theory
+    [3] http://haskell.cs.yale.edu/wp-content/uploads/2011/02/tech_report_1440.pdf 
+    [4] https://en.wikipedia.org/wiki/Generative_theory_of_tonal_music 
+    [5] http://www.grappa.univ-lille3.fr/~staworko/papers/staworko-mcm15.pdf 
+
   </div>
   
 </article>
@@ -143,3 +195,4 @@ $(".all-sections").prepend(ToC);
 </body>
   
 </html>
+
